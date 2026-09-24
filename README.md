@@ -27,8 +27,8 @@ Validation, JUnit 5, MockMvc, H2 for tests, Maven, GitHub Actions.
 ## Running it
 
 ```bash
-docker compose up -d db          # Postgres on 5433
-mvn spring-boot:run
+docker compose up -d db          # Postgres on localhost:5433 (the app's default)
+mvn spring-boot:run              # http://localhost:8080
 ```
 
 Tests need no database. They run on in-memory H2 in PostgreSQL compatibility
@@ -63,12 +63,13 @@ rather than Spring's default error page. A missing row returns 404, not 500.
 computed with a JPQL aggregate query returning a projection interface, not by
 loading every row and summing in Java.
 
-**Constructor injection, not `@Autowired` on a field.** The repository is
-required, so it belongs in the constructor where it cannot be null and the class
+**Constructor injection, not `@Autowired` on a field.** The controller's
+repository is required, so it belongs in the constructor where it cannot be null and the class
 can be built in a test without a Spring context.
 
-**Composite index on `(category, spent_on)`.** That is the shape of the common
-query, so one index serves it instead of two separate lookups.
+**Composite index on `(category, spent_on)`.** The list endpoint filters by
+category and sorts by date, so one index serves both instead of a filter
+followed by a sort.
 
 **Enum stored as `STRING`, not ordinal.** Ordinals are positional, so inserting
 a new category in the middle of the enum would silently rewrite the meaning of

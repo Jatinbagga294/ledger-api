@@ -182,4 +182,30 @@ class ExpenseControllerTest {
         mvc.perform(get("/health")).andExpect(status().isOk())
             .andExpect(jsonPath("$.status", is("ok")));
     }
+
+    @Test
+    @DisplayName("an existing expense can be fetched by id")
+    void fetchesOneById() throws Exception {
+        long id = create("Monthly pass", "156.00", "TRANSPORT", "2026-09-02");
+        mvc.perform(get("/api/expenses/" + id))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id", is((int) id)))
+            .andExpect(jsonPath("$.description", is("Monthly pass")));
+    }
+
+    @Test
+    @DisplayName("the list is paginated, newest first")
+    void paginatesNewestFirst() throws Exception {
+        create("First", "10.00", "DINING", "2026-09-01");
+        create("Second", "20.00", "DINING", "2026-09-02");
+        create("Third", "30.00", "DINING", "2026-09-03");
+        mvc.perform(get("/api/expenses").param("page", "0").param("size", "2"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content", hasSize(2)))
+            .andExpect(jsonPath("$.content[0].description", is("Third")))
+            .andExpect(jsonPath("$.totalElements", is(3)));
+        mvc.perform(get("/api/expenses").param("page", "1").param("size", "2"))
+            .andExpect(jsonPath("$.content", hasSize(1)))
+            .andExpect(jsonPath("$.content[0].description", is("First")));
+    }
 }

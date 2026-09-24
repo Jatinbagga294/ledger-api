@@ -1,6 +1,6 @@
 # Ledger API
 
-A REST service for tracking expenses. Spring Boot, PostgreSQL, JPA, 13 JUnit
+A REST service for tracking expenses. Spring Boot, PostgreSQL, JPA, 15 JUnit
 tests.
 
 Built to learn the Java stack that most Canadian banks and insurers hire for.
@@ -39,7 +39,7 @@ mvn test
 ```
 
 ```
-Tests run: 13, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 15, Failures: 0, Errors: 0, Skipped: 0
 BUILD SUCCESS
 ```
 
@@ -90,7 +90,7 @@ src/main/java/com/jatinbagga/ledger/
   controller/HealthController.java
   exception/ApiExceptionHandler.java consistent JSON errors
   exception/NotFoundException.java
-src/test/java/...ExpenseControllerTest.java  13 MockMvc tests
+src/test/java/...ExpenseControllerTest.java  15 MockMvc tests
 ```
 
 ## Not done yet
